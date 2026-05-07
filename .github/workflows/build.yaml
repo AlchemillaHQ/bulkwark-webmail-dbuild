@@ -41,6 +41,7 @@ jobs:
         with:
           name: bulwark-web
           path: /tmp/bulwark-web/
+          include-hidden-files: true
 
   build:
     needs: build-web

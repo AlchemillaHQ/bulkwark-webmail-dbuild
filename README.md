@@ -13,7 +13,7 @@ Bulwark Webmail on FreeBSD.
 | | |
 |---|---|
 | **Port** | 3000 |
-| **Registry** | `ghcr.io/daemonless/bulwark-webmail` |
+| **Registry** | `ghcr.io/alchemillahq/bulwark-webmail` |
 | **Source** | [https://github.com/bulwarkmail/webmail](https://github.com/bulwarkmail/webmail) |
 | **Website** | [https://bulwarkmail.org/](https://bulwarkmail.org/) |
 
@@ -34,7 +34,7 @@ Before deploying, ensure your host environment is ready. See the [Quick Start Gu
 ```yaml
 services:
   bulwark-webmail:
-    image: ghcr.io/daemonless/bulwark-webmail:latest
+    image: ghcr.io/alchemillahq/bulwark-webmail:latest
     container_name: bulwark-webmail
     environment:
       - JMAP_SERVER_URL=https://mail.example.com
@@ -64,7 +64,7 @@ options:
   - nat:
 services:
   bulwark-webmail:
-    name: bulwark_webmail_dbuild
+    name: bulwark_webmail
     options:
       - container: 'boot args:--pull'
     oci:
@@ -85,7 +85,7 @@ volumes:
 ARG tag=latest
 
 OPTION overwrite=force
-OPTION from=ghcr.io/daemonless/bulwark-webmail:${tag}
+OPTION from=ghcr.io/alchemillahq/bulwark-webmail:${tag}
 ```
 
 ### Podman CLI
@@ -96,7 +96,7 @@ podman run -d --name bulwark-webmail \
   -e JMAP_SERVER_URL=https://mail.example.com \
   -e TZ=UTC \
   -v /path/to/containers/bulwark-webmail/app/data:/app/data \
-  ghcr.io/daemonless/bulwark-webmail:latest
+  ghcr.io/alchemillahq/bulwark-webmail:latest
 ```
 
 ### Ansible
@@ -105,7 +105,7 @@ podman run -d --name bulwark-webmail \
 - name: Deploy bulwark-webmail
   containers.podman.podman_container:
     name: bulwark-webmail
-    image: ghcr.io/daemonless/bulwark-webmail:latest
+    image: ghcr.io/alchemillahq/bulwark-webmail:latest
     state: started
     restart_policy: always
     env:
@@ -139,9 +139,5 @@ podman run -d --name bulwark-webmail \
 | `3000` | TCP | Web UI |
 
 **Architectures:** amd64
-**User:** `nextjs` (UID/GID via PUID/PGID, defaults to 1000:1000)
+**User:** `bsd` (UID/GID via PUID/PGID, defaults to 1000:1000)
 **Base:** FreeBSD 15.0
-
----
-
-Need help? Join our [Discord](https://discord.gg/Kb9tkhecZT) community.
