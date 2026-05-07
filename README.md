@@ -5,15 +5,15 @@ Source: dbuild templates
 
 # Bulwark Webmail
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/daemonless/bulwark-webmail-dbuild/build.yaml?style=flat-square&label=Build&color=green)](https://github.com/daemonless/bulwark-webmail-dbuild/actions)
-[![Last Commit](https://img.shields.io/github/last-commit/daemonless/bulwark-webmail-dbuild?style=flat-square&label=Last+Commit&color=blue)](https://github.com/daemonless/bulwark-webmail-dbuild/commits)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/daemonless/bulwark-webmail/build.yaml?style=flat-square&label=Build&color=green)](https://github.com/daemonless/bulwark-webmail/actions)
+[![Last Commit](https://img.shields.io/github/last-commit/daemonless/bulwark-webmail?style=flat-square&label=Last+Commit&color=blue)](https://github.com/daemonless/bulwark-webmail/commits)
 
 Bulwark Webmail on FreeBSD.
 
 | | |
 |---|---|
 | **Port** | 3000 |
-| **Registry** | `ghcr.io/daemonless/bulwark-webmail-dbuild` |
+| **Registry** | `ghcr.io/daemonless/bulwark-webmail` |
 | **Source** | [https://github.com/bulwarkmail/webmail](https://github.com/bulwarkmail/webmail) |
 | **Website** | [https://bulwarkmail.org/](https://bulwarkmail.org/) |
 
@@ -33,14 +33,14 @@ Before deploying, ensure your host environment is ready. See the [Quick Start Gu
 
 ```yaml
 services:
-  bulwark-webmail-dbuild:
-    image: ghcr.io/daemonless/bulwark-webmail-dbuild:latest
-    container_name: bulwark-webmail-dbuild
+  bulwark-webmail:
+    image: ghcr.io/daemonless/bulwark-webmail:latest
+    container_name: bulwark-webmail
     environment:
       - JMAP_SERVER_URL=https://mail.example.com
       - TZ=UTC
     volumes:
-      - "/path/to/containers/bulwark-webmail-dbuild/app/data:/app/data"
+      - "/path/to/containers/bulwark-webmail/app/data:/app/data"
     ports:
       - 3000:3000
     restart: unless-stopped
@@ -51,7 +51,7 @@ services:
 **.env**:
 
 ```
-DIRECTOR_PROJECT=bulwark-webmail-dbuild
+DIRECTOR_PROJECT=bulwark-webmail
 JMAP_SERVER_URL=https://mail.example.com
 TZ=UTC
 ```
@@ -63,7 +63,7 @@ options:
   - virtualnet: ':<random> default'
   - nat:
 services:
-  bulwark-webmail-dbuild:
+  bulwark-webmail:
     name: bulwark_webmail_dbuild
     options:
       - container: 'boot args:--pull'
@@ -73,10 +73,10 @@ services:
         - JMAP_SERVER_URL: !ENV '${JMAP_SERVER_URL}'
         - TZ: !ENV '${TZ}'
     volumes:
-      - bulwark-webmail-dbuild_app_data: /app/data
+      - bulwark-webmail_app_data: /app/data
 volumes:
-  bulwark-webmail-dbuild_app_data:
-    device: '/path/to/containers/bulwark-webmail-dbuild/app/data'
+  bulwark-webmail_app_data:
+    device: '/path/to/containers/bulwark-webmail/app/data'
 ```
 
 **Makejail**:
@@ -85,27 +85,27 @@ volumes:
 ARG tag=latest
 
 OPTION overwrite=force
-OPTION from=ghcr.io/daemonless/bulwark-webmail-dbuild:${tag}
+OPTION from=ghcr.io/daemonless/bulwark-webmail:${tag}
 ```
 
 ### Podman CLI
 
 ```bash
-podman run -d --name bulwark-webmail-dbuild \
+podman run -d --name bulwark-webmail \
   -p 3000:3000 \
   -e JMAP_SERVER_URL=https://mail.example.com \
   -e TZ=UTC \
-  -v /path/to/containers/bulwark-webmail-dbuild/app/data:/app/data \
-  ghcr.io/daemonless/bulwark-webmail-dbuild:latest
+  -v /path/to/containers/bulwark-webmail/app/data:/app/data \
+  ghcr.io/daemonless/bulwark-webmail:latest
 ```
 
 ### Ansible
 
 ```yaml
-- name: Deploy bulwark-webmail-dbuild
+- name: Deploy bulwark-webmail
   containers.podman.podman_container:
-    name: bulwark-webmail-dbuild
-    image: ghcr.io/daemonless/bulwark-webmail-dbuild:latest
+    name: bulwark-webmail
+    image: ghcr.io/daemonless/bulwark-webmail:latest
     state: started
     restart_policy: always
     env:
@@ -114,7 +114,7 @@ podman run -d --name bulwark-webmail-dbuild \
     ports:
       - "3000:3000"
     volumes:
-      - "/path/to/containers/bulwark-webmail-dbuild/app/data:/app/data"
+      - "/path/to/containers/bulwark-webmail/app/data:/app/data"
 ```
 
 ## Parameters

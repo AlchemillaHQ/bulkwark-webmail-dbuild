@@ -1,4 +1,4 @@
-name: bulwark-webmail-dbuild
+name: bulwark-webmail
 
 x-daemonless:
   title: "Bulwark Webmail"
@@ -7,7 +7,7 @@ x-daemonless:
   description: "Bulwark Webmail on FreeBSD."
   upstream_url: "https://github.com/bulwarkmail/webmail"
   web_url: "https://bulwarkmail.org/"
-  user: "nextjs"
+  user: "bsd"
   mlock: false
   appjail: true
 
@@ -25,13 +25,10 @@ services:
     image: ghcr.io/daemonless/bulwark-webmail:latest
     container_name: bulwark-webmail
     restart: unless-stopped
-
     environment:
       - JMAP_SERVER_URL=https://mail.example.com
       - TZ=UTC
-
     volumes:
       - /path/to/containers/bulwark-webmail:/app/data
-
     ports:
       - 3000:3000

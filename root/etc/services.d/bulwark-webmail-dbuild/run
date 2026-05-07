@@ -1,2 +1,2 @@
 #!/bin/sh
-exec node /app/server.js
+exec s6-setuidgid bsd node /app/server.js

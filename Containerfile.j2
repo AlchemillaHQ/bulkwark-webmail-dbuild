@@ -20,9 +20,7 @@ LABEL org.opencontainers.image.title="Bulwark Webmail" \
 RUN pkg update && \
     pkg install -y node ca_root_nss && \
     pkg clean -ay && \
-    rm -rf /var/cache/pkg/* /var/db/pkg/repos/* && \
-    pw groupadd -n nodejs -g 1001 || true && \
-    pw useradd -n nextjs -u 1001 -g nodejs -d /app -s /usr/sbin/nologin || true
+    rm -rf /var/cache/pkg/* /var/db/pkg/repos/*
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -36,11 +34,9 @@ COPY bulwark-public/ ./public
 COPY root/ /
 
 RUN mkdir -p /app/data /config && \
-    chown -R nextjs:nodejs /app /config && \
-    chmod +x /etc/services.d/bulwark-webmail-dbuild/run /healthz 2>/dev/null || true && \
+    chown -R bsd:bsd /app /config && \
+    chmod +x /etc/services.d/bulwark-webmail/run /healthz 2>/dev/null || true && \
     echo "${APP_VERSION}" > /app/version
-
-USER nextjs
 
 EXPOSE 3000
 

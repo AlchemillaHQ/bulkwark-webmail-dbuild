@@ -1,18 +1,10 @@
 #!/bin/sh
-# Daemonless standard healthcheck for bulwark-webmail-dbuild
 
-if [ -n "$TUNNEL_TOKEN" ]; then
-    # Standard Mode: Check /ready or HTTP endpoint
-    if fetch -o /dev/null "http://127.0.0.1:3000/" >/dev/null 2>&1; then
-        exit 0
-    else
-        exit 1
-    fi
-else
-    # CIT Mock Mode (Tokenless): Check TCP port
-    if nc -z 127.0.0.1 "3000" >/dev/null 2>&1; then
-        exit 0
-    else
-        exit 1
-    fi
+# Health check for Bulwark Webmail. Checks if the server is responding on localhost:3000.
+if ! fetch -qo /dev/null --timeout 5 "http://127.0.0.1:3000/" 2>/dev/null; then
+    echo "Bulwark Webmail not responding"
+    exit 1
 fi
+
+echo "healthy"
+exit 0

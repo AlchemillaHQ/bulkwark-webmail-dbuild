@@ -46,7 +46,7 @@ jobs:
     needs: build-web
     uses: daemonless/dbuild/.github/workflows/daemonless-build.yaml@main
     with:
-      image_name: bulwark-webmail-dbuild
+      image_name: bulwark-webmail
       pre_artifact_name: bulwark-web
       pre_artifact_path: .
     secrets: inherit
