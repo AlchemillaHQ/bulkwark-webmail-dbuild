@@ -1,0 +1,52 @@
+name: Build FreeBSD Container
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['*.md', 'LICENSE', '.gitignore']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Bulwark Webmail
+        uses: actions/checkout@v4
+        with:
+          repository: bulwarkmail/webmail
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Build Bulwark Webmail
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: |
+          npm ci
+          npx next build --webpack
+
+          mkdir -p /tmp/bulwark-web
+          cp -a .next/standalone /tmp/bulwark-web/bulwark-standalone
+          cp -a .next/static /tmp/bulwark-web/bulwark-static
+          cp -a public /tmp/bulwark-web/bulwark-public
+
+      - name: Upload Bulwark build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bulwark-web
+          path: /tmp/bulwark-web/
+
+  build:
+    needs: build-web
+    uses: daemonless/dbuild/.github/workflows/daemonless-build.yaml@main
+    with:
+      image_name: bulwark-webmail-dbuild
+      pre_artifact_name: bulwark-web
+      pre_artifact_path: .
+    secrets: inherit

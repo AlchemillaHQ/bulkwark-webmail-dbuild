@@ -1,0 +1,37 @@
+name: bulwark-webmail-dbuild
+
+x-daemonless:
+  title: "Bulwark Webmail"
+  icon: ":material-email:"
+  category: "Communication"
+  description: "Bulwark Webmail on FreeBSD."
+  upstream_url: "https://github.com/bulwarkmail/webmail"
+  web_url: "https://bulwarkmail.org/"
+  user: "nextjs"
+  mlock: false
+  appjail: true
+
+  docs:
+    env:
+      JMAP_SERVER_URL: "URL of your Stalwart JMAP/JMAP-over-HTTP server"
+      TZ: "Timezone for the container"
+    volumes:
+      /app/data: "Bulwark persistent data"
+    ports:
+      3000: "Web UI"
+
+services:
+  bulwark-webmail:
+    image: ghcr.io/daemonless/bulwark-webmail:latest
+    container_name: bulwark-webmail
+    restart: unless-stopped
+
+    environment:
+      - JMAP_SERVER_URL=https://mail.example.com
+      - TZ=UTC
+
+    volumes:
+      - /path/to/containers/bulwark-webmail:/app/data
+
+    ports:
+      - 3000:3000
